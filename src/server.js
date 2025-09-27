@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import pinoHttp from 'pino-http';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -7,11 +8,9 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3030;
 
-app.use((req, res, next) => {
-  const timestamp = new Date().toISOString();
-  console.log(`${timestamp} - ${req.method} ${req.url}`);
-  next();
-});
+app.use(pinoHttp({
+  level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
+}));
 
 app.use(cors());
 app.use(express.json());
