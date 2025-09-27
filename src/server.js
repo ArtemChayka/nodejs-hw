@@ -1,6 +1,5 @@
 import express from 'express';
 import cors from 'cors';
-import pinoHttp from 'pino-http';
 import dotenv from 'dotenv';
 
 // Загрузка переменных окружения
@@ -9,18 +8,14 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3030;
 
-// Middleware для логирования
-const logger = pinoHttp({
-  transport: {
-    target: 'pino-pretty',
-    options: {
-      colorize: true,
-    },
-  },
+// Middleware для логирования HTTP-запросов
+app.use((req, res, next) => {
+  const timestamp = new Date().toISOString();
+  console.log(`${timestamp} - ${req.method} ${req.url}`);
+  next();
 });
 
 // Подключение middleware
-app.use(logger);
 app.use(cors());
 app.use(express.json());
 
