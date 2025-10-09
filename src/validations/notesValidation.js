@@ -2,7 +2,6 @@ import { celebrate, Joi, Segments } from 'celebrate';
 import { isValidObjectId } from 'mongoose';
 import { TAGS } from '../constants/tags.js';
 
-// Кастомна валідація для MongoDB ObjectId
 const objectIdValidator = (value, helpers) => {
   if (!isValidObjectId(value)) {
     return helpers.error('any.invalid');
@@ -10,7 +9,6 @@ const objectIdValidator = (value, helpers) => {
   return value;
 };
 
-// Схема валідації для GET /notes (з пагінацією, фільтрацією, пошуком)
 export const getAllNotesSchema = celebrate({
   [Segments.QUERY]: Joi.object({
     page: Joi.number().integer().min(1).default(1),
@@ -20,7 +18,6 @@ export const getAllNotesSchema = celebrate({
   }),
 });
 
-// Схема валідації для параметра noteId
 export const noteIdSchema = celebrate({
   [Segments.PARAMS]: Joi.object({
     noteId: Joi.string().custom(objectIdValidator).required().messages({
@@ -30,7 +27,6 @@ export const noteIdSchema = celebrate({
   }),
 });
 
-// Схема валідації для POST /notes
 export const createNoteSchema = celebrate({
   [Segments.BODY]: Joi.object({
     title: Joi.string().min(1).required().messages({
@@ -44,7 +40,6 @@ export const createNoteSchema = celebrate({
   }),
 });
 
-// Схема валідації для PATCH /notes/:noteId
 export const updateNoteSchema = celebrate({
   [Segments.PARAMS]: Joi.object({
     noteId: Joi.string().custom(objectIdValidator).required().messages({
@@ -56,5 +51,5 @@ export const updateNoteSchema = celebrate({
     title: Joi.string().min(1),
     content: Joi.string().allow(''),
     tag: Joi.string().valid(...TAGS),
-  }).min(1), // Хоча б одне поле має бути передано
+  }).min(1),
 });
