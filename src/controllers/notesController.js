@@ -5,7 +5,6 @@ export const getAllNotes = async (req, res, next) => {
   try {
     const { page = 1, perPage = 10, tag, search } = req.query;
 
-    // Побудова фільтру
     const filter = {};
 
     if (tag) {
@@ -16,13 +15,10 @@ export const getAllNotes = async (req, res, next) => {
       filter.$text = { $search: search };
     }
 
-    // Підрахунок загальної кількості нотаток з фільтром
     const totalNotes = await Note.countDocuments(filter);
 
-    // Підрахунок загальної кількості сторінок
     const totalPages = Math.ceil(totalNotes / perPage);
 
-    // Отримання нотаток з пагінацією
     const notes = await Note.find(filter)
       .skip((page - 1) * perPage)
       .limit(perPage);
