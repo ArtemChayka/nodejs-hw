@@ -3,9 +3,37 @@ import { Note } from '../models/note.js';
 
 export const getAllNotes = async (req, res, next) => {
   try {
-    const notes = await Note.find();
+    const { page = 1, perPage = 10, tag, search } = req.query;
 
-    res.status(200).json(notes);
+    // Побудова фільтру
+    const filter = {};
+
+    if (tag) {
+      filter.tag = tag;
+    }
+
+    if (search) {
+      filter.$text = { $search: search };
+    }
+
+    // Підрахунок загальної кількості нотаток з фільтром
+    const totalNotes = await Note.countDocuments(filter);
+
+    // Підрахунок загальної кількості сторінок
+    const totalPages = Math.ceil(totalNotes / perPage);
+
+    // Отримання нотаток з пагінацією
+    const notes = await Note.find(filter)
+      .skip((page - 1) * perPage)
+      .limit(perPage);
+
+    res.status(200).json({
+      page: Number(page),
+      perPage: Number(perPage),
+      totalNotes,
+      totalPages,
+      notes,
+    });
   } catch (error) {
     next(error);
   }
