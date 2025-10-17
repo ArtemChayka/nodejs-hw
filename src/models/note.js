@@ -30,7 +30,6 @@ const noteSchema = new Schema(
   },
 );
 
-// Створення текстового індексу для пошуку по title та content
 noteSchema.index({ title: 'text', content: 'text' });
 
 export const Note = model('Note', noteSchema);

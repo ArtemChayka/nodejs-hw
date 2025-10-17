@@ -16,7 +16,6 @@ import {
 
 const router = Router();
 
-// Всі маршрути потребують аутентифікації
 router.use(authenticate);
 
 router.get('/notes', getAllNotesSchema, getAllNotes);

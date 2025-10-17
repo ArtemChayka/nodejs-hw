@@ -16,10 +16,8 @@ const PORT = process.env.PORT || 3030;
 const startServer = async () => {
   const app = express();
 
-  // Підключення до MongoDB перед запуском сервера
   await connectMongoDB();
 
-  // Middleware
   app.use(logger);
   app.use(cors({
     origin: process.env.CORS_ORIGIN || '*',
@@ -28,20 +26,15 @@ const startServer = async () => {
   app.use(express.json());
   app.use(cookieParser());
 
-  // Роути
   app.use(authRoutes);
   app.use(notesRoutes);
 
-  // Обробка неіснуючих маршрутів (404)
   app.use('*', notFoundHandler);
 
-  // Middleware для обробки помилок валідації від celebrate
   app.use(errors());
 
-  // Глобальна обробка помилок
   app.use(errorHandler);
 
-  // Запуск сервера
   app.listen(PORT, () => {
     console.log(`🚀 Server is running on port ${PORT}`);
   });

@@ -6,32 +6,26 @@ export const getAllNotes = async (req, res, next) => {
     const { page = 1, perPage = 10, tag, search } = req.query;
     const userId = req.user._id;
 
-    // Побудова запиту через ланцюжок методів Mongoose
     let notesQuery = Note.find({ userId });
     let countQuery = Note.find({ userId });
 
-    // Додаємо фільтр по тегу якщо він є
     if (tag) {
       notesQuery = notesQuery.where('tag').equals(tag);
       countQuery = countQuery.where('tag').equals(tag);
     }
 
-    // Додаємо текстовий пошук якщо він є
     if (search) {
       notesQuery = notesQuery.where({ $text: { $search: search } });
       countQuery = countQuery.where({ $text: { $search: search } });
     }
 
-    // Додаємо пагінацію до запиту нотаток
     notesQuery = notesQuery.skip((page - 1) * perPage).limit(perPage);
 
-    // Паралельне виконання запитів через Promise.all
     const [notes, totalNotes] = await Promise.all([
       notesQuery.exec(),
       countQuery.countDocuments(),
     ]);
 
-    // Підрахунок загальної кількості сторінок
     const totalPages = Math.ceil(totalNotes / perPage);
 
     res.status(200).json({
