@@ -6,6 +6,7 @@ import {
   updateNote,
   deleteNote,
 } from '../controllers/notesController.js';
+import { authenticate } from '../middleware/authenticate.js';
 import {
   getAllNotesSchema,
   noteIdSchema,
@@ -14,6 +15,9 @@ import {
 } from '../validations/notesValidation.js';
 
 const router = Router();
+
+// Всі маршрути потребують аутентифікації
+router.use(authenticate);
 
 router.get('/notes', getAllNotesSchema, getAllNotes);
 router.get('/notes/:noteId', noteIdSchema, getNoteById);
