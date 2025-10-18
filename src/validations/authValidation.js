@@ -1,6 +1,6 @@
-import { celebrate, Joi, Segments } from 'celebrate';
+import { Joi, Segments } from 'celebrate';
 
-export const registerUserSchema = celebrate({
+export const registerUserSchema = {
   [Segments.BODY]: Joi.object({
     email: Joi.string().email().required().messages({
       'string.email': 'Invalid email format',
@@ -11,9 +11,9 @@ export const registerUserSchema = celebrate({
       'any.required': 'Password is required',
     }),
   }),
-});
+};
 
-export const loginUserSchema = celebrate({
+export const loginUserSchema = {
   [Segments.BODY]: Joi.object({
     email: Joi.string().email().required().messages({
       'string.email': 'Invalid email format',
@@ -23,4 +23,4 @@ export const loginUserSchema = celebrate({
       'any.required': 'Password is required',
     }),
   }),
-});
+};
