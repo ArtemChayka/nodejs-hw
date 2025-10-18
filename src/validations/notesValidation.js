@@ -9,7 +9,7 @@ const objectIdValidator = (value, helpers) => {
   return value;
 };
 
-export const getAllNotesSchema = celebrate({
+export const validateGetAllNotes = celebrate({
   [Segments.QUERY]: Joi.object({
     page: Joi.number().integer().min(1).default(1),
     perPage: Joi.number().integer().min(5).max(20).default(10),
@@ -18,7 +18,7 @@ export const getAllNotesSchema = celebrate({
   }),
 });
 
-export const noteIdSchema = celebrate({
+export const validateNoteId = celebrate({
   [Segments.PARAMS]: Joi.object({
     noteId: Joi.string().custom(objectIdValidator).required().messages({
       'any.invalid': 'Invalid note ID format',
@@ -27,7 +27,7 @@ export const noteIdSchema = celebrate({
   }),
 });
 
-export const createNoteSchema = celebrate({
+export const validateCreateNote = celebrate({
   [Segments.BODY]: Joi.object({
     title: Joi.string().min(1).required().messages({
       'string.min': 'Title must be at least 1 character long',
@@ -40,7 +40,7 @@ export const createNoteSchema = celebrate({
   }),
 });
 
-export const updateNoteSchema = celebrate({
+export const validateUpdateNote = celebrate({
   [Segments.PARAMS]: Joi.object({
     noteId: Joi.string().custom(objectIdValidator).required().messages({
       'any.invalid': 'Invalid note ID format',
