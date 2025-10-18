@@ -1,4 +1,4 @@
-import { celebrate, Joi, Segments } from 'celebrate';
+import { Joi, Segments } from 'celebrate';
 import { isValidObjectId } from 'mongoose';
 import { TAGS } from '../constants/tags.js';
 
@@ -9,25 +9,25 @@ const objectIdValidator = (value, helpers) => {
   return value;
 };
 
-export const validateGetAllNotes = celebrate({
+export const getAllNotesSchema = {
   [Segments.QUERY]: Joi.object({
     page: Joi.number().integer().min(1).default(1),
     perPage: Joi.number().integer().min(5).max(20).default(10),
     tag: Joi.string().valid(...TAGS),
     search: Joi.string().allow(''),
   }),
-});
+};
 
-export const validateNoteId = celebrate({
+export const noteIdSchema = {
   [Segments.PARAMS]: Joi.object({
     noteId: Joi.string().custom(objectIdValidator).required().messages({
       'any.invalid': 'Invalid note ID format',
       'any.required': 'Note ID is required',
     }),
   }),
-});
+};
 
-export const validateCreateNote = celebrate({
+export const createNoteSchema = {
   [Segments.BODY]: Joi.object({
     title: Joi.string().min(1).required().messages({
       'string.min': 'Title must be at least 1 character long',
@@ -38,9 +38,9 @@ export const validateCreateNote = celebrate({
       .valid(...TAGS)
       .default('Todo'),
   }),
-});
+};
 
-export const validateUpdateNote = celebrate({
+export const updateNoteSchema = {
   [Segments.PARAMS]: Joi.object({
     noteId: Joi.string().custom(objectIdValidator).required().messages({
       'any.invalid': 'Invalid note ID format',
@@ -52,4 +52,4 @@ export const validateUpdateNote = celebrate({
     content: Joi.string().allow(''),
     tag: Joi.string().valid(...TAGS),
   }).min(1),
-});
+};
