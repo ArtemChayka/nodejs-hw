@@ -127,7 +127,7 @@ export const requestResetEmail = async (req, res, next) => {
 
     const resetLink = `${process.env.FRONTEND_DOMAIN}/reset-password?token=${resetToken}`;
 
-    const templatePath = path.join(process.cwd(), 'templates', 'reset-password-email.html');
+    const templatePath = path.join(process.cwd(), 'src', 'templates', 'reset-password-email.html');
     const templateSource = await fs.readFile(templatePath, 'utf8');
     const template = handlebars.compile(templateSource);
     const html = template({
@@ -137,6 +137,7 @@ export const requestResetEmail = async (req, res, next) => {
 
     try {
       await sendEmail({
+        from: process.env.SMTP_FROM,
         to: user.email,
         subject: 'Password Reset Request',
         html,
